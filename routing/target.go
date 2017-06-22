@@ -2,6 +2,7 @@ package routing
 
 import (
 	"fmt"
+	"net"
 
 	"golang.org/x/net/proxy"
 )
@@ -12,8 +13,11 @@ type Target struct {
 }
 
 var DirectTarget = Target{
-	Name:   "direct",
-	Dialer: proxy.Direct,
+	Name: "direct",
+	Dialer: &net.Dialer{
+		// enable RFC 6555-compliant "Happy Eyeballs"
+		DualStack: true,
+	},
 }
 
 func ParseTarget(name string) (*Target, error) {
