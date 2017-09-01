@@ -7,17 +7,26 @@ import (
 
 var errListenerClosed = errors.New("Listener was closed")
 
-type FakeListener struct {
-	address net.Addr
+type fakeListeningAddress struct{}
 
+var fake_listening_address = fakeListeningAddress{}
+
+func (_ fakeListeningAddress) Network() string {
+	return "tcp"
+}
+
+func (_ fakeListeningAddress) String() string {
+	return "fake-address"
+}
+
+type FakeListener struct {
 	queueOut chan<- net.Conn
 	queueIn  <-chan net.Conn
 }
 
-func NewFakeListener(address net.Addr) *FakeListener {
+func NewFakeListener() *FakeListener {
 	q := make(chan net.Conn, 16)
 	return &FakeListener{
-		address:  address,
 		queueOut: q,
 		queueIn:  q,
 	}
@@ -54,5 +63,5 @@ func (l *FakeListener) Close() error {
 
 // Addr returns the listener's network address.
 func (l *FakeListener) Addr() net.Addr {
-	return l.address
+	return fake_listening_address
 }

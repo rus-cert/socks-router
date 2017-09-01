@@ -65,11 +65,11 @@ func (h httpHandler) Detect(peek []byte) (ConnHandler, error) {
 
 // CreateHTTPHandler returns a ProtocolHandler to detect and handle HTTP
 // and CONNECT requests
-func CreateHTTPHandler(listeningAddr net.Addr, dialer Dialer) (ProtocolHandler, error) {
+func CreateHTTPHandler(dialer Dialer) (ProtocolHandler, error) {
 	// http.Server doesn't have a "ServeConn" method; it only supports
 	// the Listener interface, so pass connections through a "fake
 	// listener" (a simple queue)
-	httpListener := connpeeker.NewFakeListener(listeningAddr)
+	httpListener := connpeeker.NewFakeListener()
 	server := &http.Server{
 		Handler:        httpproxy.HTTPProxy(dialer.Dial),
 		MaxHeaderBytes: 1 << 20,

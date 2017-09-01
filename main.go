@@ -32,6 +32,20 @@ func main() {
 	} else {
 		log.Info.Println("socks router starting")
 
+		pm := ProtocolMultiplexer{}
+
+		if socksHandler, err := CreateSocksHandler(routingMap); nil != err {
+			log.Error.Fatal(err)
+		} else {
+			pm.Handlers = append(pm.Handlers, socksHandler)
+		}
+
+		if httpHandler, err := CreateHTTPHandler(routingMap); nil != err {
+			log.Error.Fatal(err)
+		} else {
+			pm.Handlers = append(pm.Handlers, httpHandler)
+		}
+
 		var listener *net.TCPListener
 		log.Info.Printf("socks router listening on %v", listenAddr)
 		if l, err := net.Listen("tcp", listenAddr); nil != err {
@@ -42,20 +56,6 @@ func main() {
 			listener = l
 		}
 		defer listener.Close()
-
-		pm := ProtocolMultiplexer{}
-
-		if socksHandler, err := CreateSocksHandler(routingMap); nil != err {
-			log.Error.Fatal(err)
-		} else {
-			pm.Handlers = append(pm.Handlers, socksHandler)
-		}
-
-		if httpHandler, err := CreateHTTPHandler(listener.Addr(), routingMap); nil != err {
-			log.Error.Fatal(err)
-		} else {
-			pm.Handlers = append(pm.Handlers, httpHandler)
-		}
 
 		log.Error.Fatal(pm.ListenTCP(listener))
 	}
