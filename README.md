@@ -19,7 +19,8 @@ Build using go:
 
 There is also a systemd service file which assumes the binary ends up in
 `/usr/bin` and the config in `/etc/socks-router.routes` and listens to
-`127.0.0.1:1080`.
+`127.0.0.1:1080` and `[::1]:1080`.  After modifying (or creating) the
+file you need to restart the service.
 
 ## Usecase
 

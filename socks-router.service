@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User=nobody
-ExecStart=/usr/bin/socks-router -config /etc/socks-router.routes -listen 127.0.0.1:1080
+ExecStart=/usr/bin/socks-router -config /etc/socks-router.routes -listen 127.0.0.1:1080 -listen [::1]:1080
 Restart=always
 
 [Unit]
