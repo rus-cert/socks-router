@@ -35,7 +35,7 @@ func (m Map) Dial(network, address string) (c net.Conn, err error) {
 			dial = target.Dialer.Dial
 		} else {
 			desc = fmt.Sprintf("directly to %v", address)
-			dial = net.Dial
+			dial = DirectTarget.Dialer.Dial
 		}
 		log.Access.Printf("connecting %v", desc)
 		if conn, err := dial(network, address); nil != err {
